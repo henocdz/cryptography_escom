@@ -1,4 +1,4 @@
-cryptography_escom
+Cryptography Class @ ESCOM-IPN
 ==================
 
 Cryptography class projects repo.
