@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libgbutil
+Description: GB-DSRC utility library
+Version: 0.1.3
+Libs: -L${libdir} -lgbutil
+Cflags: -I${prefix}/include
+
