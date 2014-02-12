@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct _gxy
-{
-	int b,x,y;
-}gxy;
+#include "egcd.h"
 
 gxy egcd(a,b){
 	int prevr,r,prevs,s,prevt,t;
@@ -42,8 +38,5 @@ gxy egcd(a,b){
 int modinverse(a, z){
 	gxy result = egcd(a, z);
 	if (result.b == 0) return -1;
-	else{
-		if(result.x < 0) return z + result.x;
-		else return result.x % z;
-	} 
+	else return result.x < 0?(z + result.x):(result.x%z); 
 }
