@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "egcd.h"
 
 #define ASC 97
@@ -39,21 +40,13 @@ int gcd(int a,int b){
 		return gcd(b,a%b);
 }
 
-int strln(char *s){
-	int i;
-	i = 0;
-	while(s[i] != '\0'){
-		i++;
-	}
-	return i;
-}
-
 void encrypt(char *to, int a, int b){
 	char khar;
 	int len, x;
-	len = strln(to);
+	len = strlen(to);
 	char output[len];
 	x = 0;
+	printf("%s\n", to);
 	for(x; x<len; x++){
 		khar = to[x];
 		if( khar == '\0' || khar == '\r' )
@@ -71,7 +64,7 @@ void encrypt(char *to, int a, int b){
 void decrypt(char *to, int a, int b){
 	char khar;
 	int len, x;
-	len = strln(to);
+	len = strlen(to);
 	char output[len];
 	x = 0;
 	for(x; x<len; x++){
@@ -127,13 +120,13 @@ int menu(){
 
 	switch(menu){
 		case 1:
-			printf("Ingresa la cadena a cifrar: ");
-			scanf("%s",input);
+			printf("Set plaintext: ");
+			scanf(" %[^\n]",input);
 			encrypt(input,a,b);
 			break;
 		case 2:
-			printf("Ingresa la cadena a descifrar: ");
-			scanf("%s",input);
+			printf("Set ciphertext: ");
+			scanf(" %[^\n]",input);
 			decrypt(input,a,b);
 			break;
 		default:
