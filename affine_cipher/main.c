@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -99,24 +100,14 @@ int menu(){
 	printf("Set beta: ");
 	scanf("%d", &b);
 
-	if(menu == 1)
-		while(gcd(a,b) != 1){
-			system("clear");
-			printf("Los numeros %d y %d  no son COPRIMOS.\n", a, b);
-			printf("Set alpha: ");
-			scanf("%d", &a);
-			printf("Set beta: ");
-			scanf("%d", &b);
-		}
-	else
-		while(gcd(a,alen) != 1){
-			system("clear");
-			printf("Los numeros %d y %d  no son COPRIMOS.\n", a, alen);
-			printf("Set alpha: ");
-			scanf("%d", &a);
-			printf("Set beta: ");
-			scanf("%d", &b);
-		}
+	while(gcd(a,alen) != 1){
+		system("clear");
+		printf("Los numeros %d y %d  no son COPRIMOS.\n", a, alen);
+		printf("Set alpha: ");
+		scanf("%d", &a);
+		printf("Set beta: ");
+		scanf("%d", &b);
+	}
 
 	switch(menu){
 		case 1:
