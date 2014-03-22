@@ -26,6 +26,7 @@ class ImageCipher(tk.Frame):
 
     def encrypt(self, colors, key):
         encrypted = []
+        i = 0
         for color in colors:
             r, g, b = self.hill_cipher(color, key)
             while r > 255:
@@ -34,7 +35,9 @@ class ImageCipher(tk.Frame):
                 g = g % 256
             while b > 255:
                 b = b % 256
-
+            i+=1
+            if i < 99:
+                print [r,g,b]
             encrypted.append((r,g,b))
         return encrypted
 

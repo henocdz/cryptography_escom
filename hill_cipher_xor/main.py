@@ -10,7 +10,7 @@ root = tk.Tk()
 ROOT_WIDTH = root.winfo_screenwidth()
 ROOT_HEIGHT = root.winfo_screenheight()
 
-root.title('Hill Cipher v0.1')
+root.title('Hill Cipher XOR v0.1')
 
 class ImageCipher(tk.Frame):
     btn_file, btn_decrypt = None, None
@@ -45,7 +45,7 @@ class ImageCipher(tk.Frame):
 
     def encrypt(self, colors, key):
         encrypted = []
-        prevcolor = [0, 0, 0]
+        prevcolor = [133,10,39]
         i = 0
         for color in colors:
             if i < 99:
@@ -60,7 +60,7 @@ class ImageCipher(tk.Frame):
 
     def decrypt(self, colors, ikey):
         decrypted = []
-        prevcolor = [0,0,0]
+        prevcolor = [133,10,39]
         for color in colors:
             clr = self.mod(self.hill_cipher(color, ikey))
             color_ = self.xor(clr, prevcolor)

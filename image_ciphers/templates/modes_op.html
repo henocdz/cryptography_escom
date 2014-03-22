@@ -1,0 +1,12 @@
+{% extends 'bases/base.html' %}
+{% block section_title %}Modes of Operation{% endblock %}
+{% block content %}
+<form id="opmodes-form" class="sm two-btns">
+	<input type="file" name="original_img" />
+	<input type="hidden" name="decrypt_mode" value="" />
+	<div id="btns">
+		<button class="opmodes-sub" data-type="encrypt" data-action="{% url 'opmodes-encrypt' %}">Encrypt</button>
+		<button class="opmodes-sub" data-type="decrypt" data-action="{% url 'opmodes-decrypt' %}">Decrypt</button>
+	</div>
+</form>
+{% endblock %}
