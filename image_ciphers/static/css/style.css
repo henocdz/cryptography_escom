@@ -17,7 +17,7 @@ header{
 	-webkit-transform: skew(-10deg);
 }
 
-h1,h2, h4{
+h1, h2, h4{
 	text-align: center;
 }
 h1,h2{
@@ -36,7 +36,8 @@ h2{
 nav{
 	display: block;
 	font-weight: bold;
-	margin: 70px auto;
+	margin: 30px auto;
+	margin-bottom: 80px;
 	width: 60%;
 }
 
@@ -44,6 +45,14 @@ nav ul{
 	list-style: none;
 }
 
+.file_input{
+	display: none;
+}
+
+.btn-ctr{
+	display: block;
+	margin: 0 auto;
+}
 
 nav ul li{
 	display: inline-block;
@@ -53,7 +62,14 @@ nav ul li{
 	-webkit-transform: skew(-10deg);
 }
 
+.img-sd{
+	color: #fff;
+	font-size: 0.6em;
+	font-family: Helvetica, Arial, serif;
+}
+
 button{
+	outline: 0;
 	cursor: pointer;
 	color: #FFF;
 	background: transparent;
@@ -67,7 +83,7 @@ nav ul li:first-child{
 	margin-left: 0;
 }
 
-nav ul li:hover, button:hover{
+nav ul li:hover, button:hover, .yes{
 	background: rgba(32,127,239,0.5);
 	
 }

@@ -7,7 +7,6 @@ class HillCipher(object):
         self.ikey = ikey
 
     def encrypt(self, plain_text):
-        print 'The plain text is: ' + str(plain_text)
         a = _matrix(plain_text)
         k = _matrix(self.key)
         a_k = a*k
