@@ -3,7 +3,34 @@ $(function(){
 
 	function sendForm(btn, form){
 		var loader = btn.children('.loader');
-		$.ajax({
+
+		$.ajaxPrefilter(function( options, _, jqXHR ) {
+            if ( options.onreadystatechange ) {
+                var xhrFactory = options.xhr;
+                options.xhr = function() {
+                    var xhr = xhrFactory.apply( this, arguments );
+                    function handler() {
+                        options.onreadystatechange( xhr, jqXHR );
+                    }
+                    if ( xhr.addEventListener ) {
+                        xhr.addEventListener( "readystatechange", handler, false );
+                    } else {
+                        setTimeout( function() {
+                            var internal = xhr.onreadystatechange;
+                            if ( internal ) {
+                                xhr.onreadystatechange = function() {
+                                    handler();
+                                    internal.apply( this, arguments ); 
+                                };
+                            }
+                        }, 0 );
+                    }
+                    return xhr;
+                };
+            }
+        });
+
+		var xhr = $.ajax({
 			beforeSend: function(){
 				loader.text('\\/')
 			},
@@ -14,8 +41,24 @@ $(function(){
 	        contentType: false,
 	        processData: false,
 	        dataType: 'json',
+	        onreadystatechange: function(xhr){
+	        	if(xhr.readyState === 3){
+	        		data = xhr.responseText
+	        		try{
+	        			data = JSON.parse(xhr.responseText)
+	        		}catch(e){
+	        			console.err('Could not parse json response')
+	        		}
+		        	console.log(data)
+		        }
+	        },
 			success: function(res){
-				console.log(res.code);
+				if(res.zip_id){
+					iframe = $('#download_iframe')[0]
+					iframe.src = '/modes-of-operation/get_zip/'+res.zip_id+'/'
+				}else{
+					alert('No se obtuvo zip')
+				}
 			},
 			error: function(errs){
 				console.log('Error en comunicación con el servidor');
@@ -26,6 +69,7 @@ $(function(){
 				form.reset()
 			}
 		})
+
 	}
 
 	$('.opmodes-sub').on('click', function(e){
@@ -36,9 +80,9 @@ $(function(){
 		if( _type === 'decrypt'){
 			alert('Mostar tipos');
 		}else{
-			form.attr('action', $elf.data('action'))
-			form.submit()
-			//sendForm($elf, form[0])
+			//form.attr('action', $elf.data('action'))
+			//form.submit()
+			sendForm($elf, form[0])
 		}
 
 	})

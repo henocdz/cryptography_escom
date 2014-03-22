@@ -1,4 +1,7 @@
 from PIL import Image
+from zipfile import ZipFile
+import tempfile
+import os
 
 def create_zip():
     pass
@@ -29,6 +32,18 @@ def save_image(colors,size):
     i = Image.new("RGB",size)
     irgb = i.convert("RGB", palette=Image.ADAPTIVE)
     irgb.putdata(colors)
-    path = "/tmp/output_.bmp" 
-    irgb.save(path)
-    return path
+    img_obj, img_path = tempfile.mkstemp(suffix='.bmp')
+    irgb.save(img_path)
+    return img_path
+
+def create_zip(paths, filename, ext):
+    zip_obj, zip_path = tempfile.mkstemp(suffix='.zip')    
+    _zip = ZipFile(zip_path, 'w')
+        
+    for i,path in enumerate(paths):
+        _zip.write(path, "%s_%d.%s" %(filename,i,ext))
+        os.remove(path)
+
+    _zip.close()
+
+    return zip_path
