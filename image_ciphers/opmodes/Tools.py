@@ -3,8 +3,19 @@ from zipfile import ZipFile
 import tempfile
 import os
 
-def create_zip():
-    pass
+def clean_data(data):
+    p = list(data)      
+    for i, e in enumerate(p):
+        if type(e) is str or type(e) is unicode:
+            p[i] = ord(e)
+    return p
+
+def list_xor(a, b):
+    il = len(a)
+    res = []
+    for i in range(0,il):
+        res.append(a[i]^b[i])
+    return res
 
 def mod(data, z):
     rdata = []

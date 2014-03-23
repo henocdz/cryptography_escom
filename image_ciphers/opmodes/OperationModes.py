@@ -1,21 +1,16 @@
+from .Tools import clean_data, list_xor, mod
+
 class ECB:
 	"""Electronic code book"""
 	def __init__(self, cipher_instance, *args, **kwargs):
 		self.cipher = cipher_instance
-
-	def __clean(self, data):
-		p = list(data)		
-		for i, e in enumerate(p):
-			if type(e) is str or type(e) is unicode:
-				p[i] = ord(e)
-		return p
 
 	def encrypt(self, p):
 		return_string = False
 		if type(p) is str or type(p) is unicode:
 			return_string = True
 		
-		p = self.__clean(data=p)
+		p = clean_data(data=p)
 		encrypted = self.cipher.encrypt(plain_text=p)
 
 		if return_string:
@@ -27,7 +22,21 @@ class ECB:
 
 class CBC:
 	"""Cipher block chaining"""
-	pass
+	def __init__(self, cipher_instance, init_vector, *args, **kwargs):
+		self.prev = init_vector
+		self.cipher = cipher_instance
+		
+	def encrypt(self, p):
+		p = clean_data(data=p)
+		xored = list_xor(self.prev, p)
+		encrypted = self.cipher.encrypt(plain_text=xored)
+		self.prev = list(mod(encrypted, 256))
+
+		return encrypted
+
+	def decrypt(self, d):
+		pass
+
 
 class CFB:
 	"""Cipher feedback"""

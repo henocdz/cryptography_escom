@@ -9,8 +9,8 @@
 	<input type="file" name="original_img" id="original_img" class="file_input" />
 	<input type="hidden" name="decrypt_mode" value="" />
 	<div id="btns">
-		<button class="opmodes-sub" data-type="encrypt" data-action="{% url 'opmodes-encrypt' %}"><span class="loader"></span>Encrypt</button>
-		<button class="opmodes-sub" data-type="decrypt" data-action="{% url 'opmodes-decrypt' %}">Decrypt</button>
+		<button class="opmodes-sub" data-type="encrypt" data-action="{% url 'opmodes-encrypt' %}"><span class="loader"></span><span class="txt">Encrypt</span></button>
+		<button class="opmodes-sub" data-type="decrypt" data-action="{% url 'opmodes-decrypt' %}"><span class="loader"></span><span class="txt">Decrypt</span></button>
 	</div>
 </form>
 

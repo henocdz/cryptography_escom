@@ -37,8 +37,9 @@ def modes_operation_encrypt(request):
         
         paths = []
         hill_instance = hc(key=KEY, ikey= KEY_INVERSE)
+        init_vector = [133,10,39]
         ecb = op.ECB(cipher_instance = hill_instance)
-
+        cbc = op.CBC(cipher_instance = hill_instance, init_vector=init_vector)
         res = {
             'status': False,
             'current_progress': 0,
@@ -61,15 +62,26 @@ def modes_operation_encrypt(request):
         for i, color in enumerate(e_colors):
             e_colors[i] = mod(color, 256)
 
-        hill_path = save_image(e_colors, size)        
-        paths.append(hill_path)
+        ecb_path = save_image(e_colors, size)        
+        paths.append(ecb_path)
 
         res['total_imgs'] = 1
         res['status_txt'] = 'Encrypted with: %d/%d ciphers' % (res['total_imgs'], 5)
         #yield json.dumps(res)
 
         """ >>> CBC """
-        
+        e_colors = []
+        for i, color in enumerate(colors):
+            e_colors.append(cbc.encrypt(p=color))
+
+        for i, color in enumerate(e_colors):
+            e_colors[i] = mod(color, 256)
+            #print e_colors[i]
+
+        print len(e_colors), size
+        cbc_path = save_image(e_colors, size)
+        paths.append(cbc_path)
+
 
         """ >>> CREATE ZIPFILE """
         zip_path = create_zip(paths, _file.name.split('.')[0], ext)

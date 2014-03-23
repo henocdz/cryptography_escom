@@ -121,6 +121,13 @@ form #btns{
 	margin-top: 1.5em;
 }
 
+.opmodes-sub[disabled]{
+	color: #CCC;
+	cursor: progress;
+	background-color: rgba(1,1,1,0.2);
+	text-decoration: line-through;
+}
+
 form.sm{
 	width: 50%;
 }

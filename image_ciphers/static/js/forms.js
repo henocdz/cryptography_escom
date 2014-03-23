@@ -3,6 +3,8 @@ $(function(){
 
 	function sendForm(btn, form){
 		var loader = btn.children('.loader');
+		var btn_txt = btn.children('.txt');
+		var btn_txt_cpy = btn_txt.text();
 
 		$.ajaxPrefilter(function( options, _, jqXHR ) {
             if ( options.onreadystatechange ) {
@@ -32,7 +34,13 @@ $(function(){
 
 		var xhr = $.ajax({
 			beforeSend: function(){
-				loader.text('\\/')
+				$('.opmodes-sub').prop('disabled', true)
+				btn_txt.text('-')
+				loader.spin({
+					lines: 8,
+					radius: 0,
+					width: 4
+				})
 			},
 			url: btn.data('action'),
 			type: 'POST',
@@ -65,6 +73,9 @@ $(function(){
 			},
 			complete: function(jqxhr, txt){
 				loader.text('');
+				btn_txt.text(btn_txt_cpy)
+				$('.opmodes-sub').prop('disabled', false)
+
 				$('.img-sd').text('No se ha selecc...')
 				form.reset()
 			}
@@ -78,6 +89,7 @@ $(function(){
 		var _type = $elf.data('type');
 		var form  = $('#opmodes-form');
 		if( _type === 'decrypt'){
+			sendForm($elf, form[0])
 			alert('Mostar tipos');
 		}else{
 			//form.attr('action', $elf.data('action'))
