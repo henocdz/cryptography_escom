@@ -50,9 +50,10 @@ def save_image(colors,size):
 def create_zip(paths, filename, ext):
     zip_obj, zip_path = tempfile.mkstemp(suffix='.zip')    
     _zip = ZipFile(zip_path, 'w')
-        
+    
+    ciphers = ['ECB','CBC','CFB','OFB','CTR']
     for i,path in enumerate(paths):
-        _zip.write(path, "%s_%d.%s" %(filename,i,ext))
+        _zip.write(path, "%s_%s.%s" %(filename,ciphers[i],ext))
         os.remove(path)
 
     _zip.close()

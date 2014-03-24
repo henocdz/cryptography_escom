@@ -31,6 +31,18 @@ $(function(){
                 };
             }
         });
+	
+		var chunked_response = function(data){
+			res = (data).split('JSON!_!SEP')
+    		l_d = res.length
+    		res = res[l_d-1]
+    		try{
+    			res = JSON.parse(res)
+    		}catch(e){
+    			console.error('Could not parse json response')
+    		}
+    		return res
+		}
 
 		var xhr = $.ajax({
 			beforeSend: function(){
@@ -48,19 +60,16 @@ $(function(){
 	        cache: false,
 	        contentType: false,
 	        processData: false,
-	        dataType: 'json',
 	        onreadystatechange: function(xhr){
 	        	if(xhr.readyState === 3){
-	        		data = xhr.responseText
-	        		try{
-	        			data = JSON.parse(xhr.responseText)
-	        		}catch(e){
-	        			console.err('Could not parse json response')
-	        		}
-		        	console.log(data)
+	        		data = chunked_response(xhr.responseText);
+		        	$('.response_status').text(data.status_txt)
 		        }
 	        },
 			success: function(res){
+				res = chunked_response(res);
+				$('.response_status').text(data.status_txt)
+				
 				if(res.zip_id){
 					iframe = $('#download_iframe')[0]
 					iframe.src = '/modes-of-operation/get_zip/'+res.zip_id+'/'

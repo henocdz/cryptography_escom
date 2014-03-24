@@ -40,13 +40,68 @@ class CBC:
 
 class CFB:
 	"""Cipher feedback"""
-	pass
+	def __init__(self, cipher_instance, init_vector, *args, **kwargs):
+		self.prev = init_vector
+		self.cipher = cipher_instance
+		
+	def encrypt(self, p):
+		p = clean_data(data=p)
+		encrypted = self.cipher.encrypt(plain_text=self.prev)
+		xored = list_xor(encrypted, p)
+		self.prev = list(mod(xored, 256))
+
+		return xored
+
+	def decrypt(self, d):
+		pass
 
 class OFB:
 	"""Output feedback"""
-	pass
+	def __init__(self, cipher_instance, init_vector, *args, **kwargs):
+		self.prev = init_vector
+		self.cipher = cipher_instance
+		
+	def encrypt(self, p):
+		p = clean_data(data=p)
+		encrypted = self.cipher.encrypt(plain_text=self.prev)
+		self.prev = list(mod(encrypted, 256)) #Output FEEDBACK
+		xored = list_xor(encrypted, p) #Sale para C1
+
+		return xored
+
+	def decrypt(self, d):
+		pass
 
 class CTR:
 	"""Counter Mode"""
-	pass
+	def __rgb_plus_one(self,color):
+		i = self.index
+		color[i] += 1
+		if color[i] > 255:
+			color[i] = 0
+			self.index -= 1
+
+		if self.index < 0:
+			self.index = 2
+
+		return color
+
+	def __init__(self, cipher_instance, init_vector, *args, **kwargs):
+		self.prev = init_vector
+		print init_vector
+		self.cipher = cipher_instance
+		self.index = 2
+		
+	def encrypt(self, p):
+		p = clean_data(data=p)
+		encrypted = self.cipher.encrypt(plain_text=self.prev)
+		xored = list_xor(encrypted, p)
+
+		aux = self.prev[:]
+		self.prev = self.__rgb_plus_one(self.prev)
+		return xored
+
+	def decrypt(self, d):
+		pass
+
 

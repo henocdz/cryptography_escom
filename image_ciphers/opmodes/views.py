@@ -40,11 +40,15 @@ def modes_operation_encrypt(request):
         init_vector = [133,10,39]
         ecb = op.ECB(cipher_instance = hill_instance)
         cbc = op.CBC(cipher_instance = hill_instance, init_vector=init_vector)
+        cfb = op.CFB(cipher_instance = hill_instance, init_vector=init_vector)
+        ofb = op.OFB(cipher_instance = hill_instance, init_vector=init_vector)
+        ctr = op.CTR(cipher_instance = hill_instance, init_vector=init_vector)
+
         res = {
             'status': False,
             'current_progress': 0,
             'errors': False,
-            'status_txt': 'Encrypted with: 0/n ciphers',
+            'status_txt': 'Processing...',
             'total_imgs': 0,
             'zip_id': None
         }
@@ -55,46 +59,90 @@ def modes_operation_encrypt(request):
         colors, size = get_colors(_file)
         e_colors = []
 
-        """ >>> ECB """
-        for i,color in enumerate(colors):
-            e_colors.append(ecb.encrypt(p=color))            
+        response = json.dumps(res)
+        yield 'JSON!_!SEP' + str(response)
 
-        for i, color in enumerate(e_colors):
-            e_colors[i] = mod(color, 256)
+        for it in range(0,6):
+            res['total_imgs'] += 1
+            res['status_txt'] = 'Encrypted with: %d of %d ciphers' % (res['total_imgs'], 5)
+            if it is 0:
+                """ 1 >>> ECB """
+                for i,color in enumerate(colors):
+                    e_colors.append(ecb.encrypt(p=color))            
 
-        ecb_path = save_image(e_colors, size)        
-        paths.append(ecb_path)
+                for i, color in enumerate(e_colors):
+                    e_colors[i] = mod(color, 256)
 
-        res['total_imgs'] = 1
-        res['status_txt'] = 'Encrypted with: %d/%d ciphers' % (res['total_imgs'], 5)
-        #yield json.dumps(res)
+                ecb_path = save_image(e_colors, size)        
+                paths.append(ecb_path)
 
-        """ >>> CBC """
-        e_colors = []
-        for i, color in enumerate(colors):
-            e_colors.append(cbc.encrypt(p=color))
+                #yield json.dumps(res)
 
-        for i, color in enumerate(e_colors):
-            e_colors[i] = mod(color, 256)
-            #print e_colors[i]
+            elif it is 1:
+                """ 2 >>> CBC """
+                e_colors = []
+                for i, color in enumerate(colors):
+                    e_colors.append(cbc.encrypt(p=color))
 
-        print len(e_colors), size
-        cbc_path = save_image(e_colors, size)
-        paths.append(cbc_path)
+                for i, color in enumerate(e_colors):
+                    e_colors[i] = mod(color, 256)
 
+                cbc_path = save_image(e_colors, size)
+                paths.append(cbc_path)
 
-        """ >>> CREATE ZIPFILE """
-        zip_path = create_zip(paths, _file.name.split('.')[0], ext)
-        print 'ho'
-        res['zip_id'] = zip_path.split('/')[-1].split('.zip')[0]
-        print 'li'
-        yield json.dumps(res)
+            elif it is 2:
+                """ 3 >>> CFB """
+                e_colors = []
+                for i, color in enumerate(colors):
+                    e_colors.append(cfb.encrypt(p=color))
 
+                for i, color in enumerate(e_colors):
+                    e_colors[i] = mod(color, 256)
 
+                cfb_path = save_image(e_colors, size)
+                paths.append(cfb_path)
+
+            elif it is 3:
+                """ 4 >>> OFB """
+                e_colors = []
+                for i, color in enumerate(colors):
+                    e_colors.append(ofb.encrypt(p=color))
+
+                for i, color in enumerate(e_colors):
+                    e_colors[i] = mod(color, 256)
+
+                ofb_path = save_image(e_colors, size)
+                paths.append(ofb_path)
+
+            elif it is 4:
+                """ 5 >>> CTR """
+                e_colors = []
+                for i, color in enumerate(colors):
+                    e_colors.append(ctr.encrypt(p=color))
+
+                for i, color in enumerate(e_colors):
+                    e_colors[i] = mod(color, 256)
+
+                ctr_path = save_image(e_colors, size)
+                paths.append(ctr_path)
+
+            elif it is 5:
+                """ >>> CREATE ZIPFILE """
+                zip_path = create_zip(paths, _file.name.split('.')[0], ext)
+                res['zip_id'] = zip_path.split('/')[-1].split('.zip')[0]
+                res['total_imgs'] -= 1
+                res['status_txt'] = 'Completed!! :) [%s]' % res['zip_id']
+            
+            response = json.dumps(res)
+            yield 'JSON!_!SEP' + str(response)
+
+    def mini_proc():
+        for i in range(0,20):
+            yield i
     if 'original_img' in request.FILES:
         return StreamingHttpResponse(__process_encrypt())
     else:
-        return HttpResponse(json.dumps(res), content_type='application/json')
+        return HttpResponse(json.dumps(res), content_type='plain/text')
 
 def modes_operation_decrypt(request):
     """-"""
