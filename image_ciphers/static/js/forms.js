@@ -69,10 +69,16 @@ $(function(){
 			success: function(res){
 				res = chunked_response(res);
 				$('.response_status').text(data.status_txt)
-				
+
 				if(res.zip_id){
 					iframe = $('#download_iframe')[0]
-					iframe.src = '/modes-of-operation/get_zip/'+res.zip_id+'/'
+					var _type = btn.data('type');
+
+					if(_type === 'decrypt')
+						iframe.src = '/modes-of-operation/get_img/'+res.zip_id+'/'
+					else
+						iframe.src = '/modes-of-operation/get_zip/'+res.zip_id+'/'
+
 				}else{
 					alert('No se obtuvo zip')
 				}
@@ -99,6 +105,8 @@ $(function(){
 		var form  = $('#opmodes-form');
 		if( _type === 'decrypt'){
 			sendForm($elf, form[0])
+			//form.attr('action', $elf.data('action'))
+			//form.submit()
 			alert('Mostar tipos');
 		}else{
 			//form.attr('action', $elf.data('action'))

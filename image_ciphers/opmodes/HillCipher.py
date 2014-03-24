@@ -14,8 +14,7 @@ class HillCipher(object):
         return a_k[0]
 
     def decrypt(self, cipher_text):
-        print 'The cipher text is: ' + str(cipher_text)
-        a = _matrix(plain_text)
+        a = _matrix(cipher_text)
         k = _matrix(self.ikey)
         a_k = a*k
         a_k = a_k.tolist()

@@ -136,9 +136,7 @@ def modes_operation_encrypt(request):
             response = json.dumps(res)
             yield 'JSON!_!SEP' + str(response)
 
-    def mini_proc():
-        for i in range(0,20):
-            yield i
+
     if 'original_img' in request.FILES:
         return StreamingHttpResponse(__process_encrypt())
     else:
@@ -146,7 +144,73 @@ def modes_operation_encrypt(request):
 
 def modes_operation_decrypt(request):
     """-"""
-    pass
+    res = {
+        'status': False,
+        'current_progress': 0,
+        'errors': False,
+        'status_txt': 'No has seleccionado una imagen o un cifrador',
+        'total_imgs': 0,
+    }
+
+    def __process_decrypt():
+        hill_instance = hc(key=KEY, ikey= KEY_INVERSE)
+        init_vector = [133,10,39]
+        op_mode = (request.POST['decryption_mode']).lower()
+       
+        _file = request.FILES['original_img']
+        ext = file_format(_file)
+        colors, size = get_colors(_file)
+        e_colors = []
+        total_colors = len(colors)
+
+        opmode = op.ECB(cipher_instance = hill_instance)
+        if op_mode == 'ecb':
+            pass
+        elif op_mode == 'cbc':
+            opmode = op.CBC(cipher_instance = hill_instance, init_vector=init_vector)
+        elif op_mode == 'cfb':
+            opmode = op.CFB(cipher_instance = hill_instance, init_vector=init_vector)
+        elif op_mode == 'ofb':
+            opmode = op.OFB(cipher_instance = hill_instance, init_vector=init_vector)
+        elif op_mode == 'ctr':
+            opmode = op.CTR(cipher_instance = hill_instance, init_vector=init_vector)
+
+        res = {
+            'status': False,
+            'current_progress': 0,
+            'errors': False,
+            'status_txt': 'Decryption process 0%...',
+            'total_imgs': 0,
+            'zip_id': None
+        }
+
+        response = json.dumps(res)
+        yield 'JSON!_!SEP' + str(response)
+        
+        prev = 0
+        for i, color in enumerate(colors):
+            e_colors.append(opmode.decrypt(c=color))
+            percentage = int(i * 100 / total_colors)
+            if percentage > prev:
+                prev = percentage
+                res['status_txt'] = 'Decryption process %.2f ...' % percentage
+                response = json.dumps(res)
+                yield 'JSON!_!SEP' + str(response)
+   
+        for i, color in enumerate(e_colors):
+            e_colors[i] = mod(color, 256)
+
+        img_path = save_image(e_colors, size)        
+        res['zip_id'] = img_path.split('/')[-1]
+        res['status_txt'] = 'Completed!!...'
+        response = json.dumps(res)
+        yield 'JSON!_!SEP' + str(response)
+
+
+    if 'original_img' in request.FILES and 'decryption_mode' in request.POST:
+        return StreamingHttpResponse(__process_decrypt())
+    else:
+        return HttpResponse(json.dumps(res), content_type='plain/text')
 
 def get_zip(request, temp_zip):
     zip_path = "/tmp/%s.zip" % temp_zip
@@ -158,6 +222,21 @@ def get_zip(request, temp_zip):
     os.remove(zip_path)
     response = HttpResponse(fw, content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="%s_encrypted.zip"' %  temp_zip
+
+    return response
+    
+
+def get_img(request, temp_img):
+    img_path = "/tmp/%s" % temp_img
+    print img_path
+    try:
+        img_file = open(img_path)
+    except:
+        raise Http404
+    fw = FileWrapper(img_file)
+    os.remove(img_path)
+    response = HttpResponse(fw, content_type='image/bmp')
+    response['Content-Disposition'] = 'attachment; filename="decrypted_%s"' %  temp_img
 
     return response
     
