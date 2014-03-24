@@ -34,8 +34,13 @@ class CBC:
 
 		return encrypted
 
-	def decrypt(self, d):
-		pass
+	def decrypt(self, c):
+		c = clean_data(c)
+		encrypted = self.cipher.decrypt(cipher_text=c)
+		xored = list_xor(encrypted, self.prev)
+		self.prev = c
+
+		return xored
 
 
 class CFB:
@@ -52,8 +57,12 @@ class CFB:
 
 		return xored
 
-	def decrypt(self, d):
-		pass
+	def decrypt(self, c):
+		c = clean_data(c)
+		encrypted = self.cipher.encrypt(plain_text=self.prev)
+		xored = list_xor(encrypted, c)
+		self.prev = c
+		return xored
 
 class OFB:
 	"""Output feedback"""
@@ -69,8 +78,13 @@ class OFB:
 
 		return xored
 
-	def decrypt(self, d):
-		pass
+	def decrypt(self, c):
+		c = clean_data(c)
+		encrypted = self.cipher.encrypt(plain_text=self.prev)
+		xored = list_xor(encrypted, c)
+
+		self.prev = list(mod(encrypted, 256))
+		return xored
 
 class CTR:
 	"""Counter Mode"""
@@ -97,11 +111,14 @@ class CTR:
 		encrypted = self.cipher.encrypt(plain_text=self.prev)
 		xored = list_xor(encrypted, p)
 
-		aux = self.prev[:]
 		self.prev = self.__rgb_plus_one(self.prev)
 		return xored
 
-	def decrypt(self, d):
-		pass
+	def decrypt(self, c):
+		c = clean_data(data=c)
+		encrypted = self.cipher.encrypt(plain_text=self.prev)
+		xored = list_xor(encrypted, c)
+		self.prev = self.__rgb_plus_one(self.prev)
+		return xored
 
 

@@ -1,6 +1,5 @@
 $(function(){
 
-
 	function sendForm(btn, form){
 		var loader = btn.children('.loader');
 		var btn_txt = btn.children('.txt');
@@ -79,8 +78,6 @@ $(function(){
 					else
 						iframe.src = '/modes-of-operation/get_zip/'+res.zip_id+'/'
 
-				}else{
-					alert('No se obtuvo zip')
 				}
 			},
 			error: function(errs){
@@ -104,10 +101,15 @@ $(function(){
 		var _type = $elf.data('type');
 		var form  = $('#opmodes-form');
 		if( _type === 'decrypt'){
+			console.log('WTF')
+			var opmode = prompt('Set operation mode to decrypt. \n Options are: ECB,CBC,CFB,OFB, CTR: ');
+			if (opmode === null){
+				alert('Operation mode not supported ;)');
+				return false;
+			}
+
+			$('input[name=decryption_mode]').val(opmode)
 			sendForm($elf, form[0])
-			//form.attr('action', $elf.data('action'))
-			//form.submit()
-			alert('Mostar tipos');
 		}else{
 			//form.attr('action', $elf.data('action'))
 			//form.submit()

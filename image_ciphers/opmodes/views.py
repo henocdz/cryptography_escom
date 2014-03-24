@@ -163,6 +163,7 @@ def modes_operation_decrypt(request):
         e_colors = []
         total_colors = len(colors)
 
+        print op_mode
         opmode = op.ECB(cipher_instance = hill_instance)
         if op_mode == 'ecb':
             pass
