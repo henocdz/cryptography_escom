@@ -16,8 +16,9 @@
 		<nav>
 			<ul>
 				<li class="{% block yes_home%}{% endblock %}"><a href="{% url 'project-home' %}">Home</a></li>
-				<li class="{% block yes_opmodes%}{% endblock %}"><a href="{% url 'opmodes' %}">Modes of Operation</a></li>
-				<li class="{% block yes_des1%}{% endblock %}"><a href="{% url 'opmodes' %}">DES: Permutation R1</a></li>
+				<li class="{% block yes_opmodes%}{% endblock %}"><a href="{% url 'opmodes' %}">Modes of Operation [HILL]</a></li>
+				<li class="{% block yes_expansion%}{% endblock %}"><a href="{% url 'expansion' %}">DES: Expansion</a></li>
+				<li class="{% block yes_opmodes_des%}{% endblock %}"><a href="{% url 'opmodes' %}">Modes of Operation [DES]</a></li>
 			</ul>
 		</nav>
 		<section id="content">

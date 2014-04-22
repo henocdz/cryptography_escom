@@ -144,3 +144,20 @@ input{
 	display: block;
 	width: 100%;
 }
+
+input[type=text]{
+	outline: 0;
+	cursor: pointer;
+	color: #FFF;
+	background: transparent;
+	border: 1px dashed #FFF;
+	border-radius: 5px;
+	-webkit-transform: skew(-5deg);
+	padding: 8px 15px;
+}
+
+input[type=radio], label{
+	display: inline-block;
+	width: auto;
+	cursor: pointer;
+}

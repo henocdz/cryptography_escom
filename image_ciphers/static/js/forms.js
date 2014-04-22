@@ -101,7 +101,6 @@ $(function(){
 		var _type = $elf.data('type');
 		var form  = $('#opmodes-form');
 		if( _type === 'decrypt'){
-			console.log('WTF')
 			var opmode = prompt('Set operation mode to decrypt. \n Options are: ECB,CBC,CFB,OFB, CTR: ');
 			if (opmode === null){
 				alert('Operation mode not supported ;)');
@@ -120,12 +119,39 @@ $(function(){
 
 	$('.file_cvr').on('click', function(e){
 		e.preventDefault();
-		$elf = $(this);
-		file_input = $($elf.data('input'))
+		var $elf = $(this);
+		var file_input = $($elf.data('input'))
 
 		file_input.click()
 		file_input.on('change', function(){
 			$('.img-sd').text('Archivo: '+$(this).val().replace('C:\\fakepath','.../'))
+		})
+	})
+
+	$('#expansion-form').on('submit', function(e){
+		e.preventDefault()
+		var $elf = $(this)
+		var data = $elf[0].data;
+		var mode = $elf.find(':checked').val()
+
+		if(!data.value || !mode){
+			alert('Información no válida o modo no seleccionado')
+			return;
+		}
+
+		if(mode === 'tohex' && data.value.length > 4){
+			alert('Información no válida')
+			return;
+		}
+
+		var form_data = $elf.serialize();
+		var url = $elf.attr('action');
+		$.post(url, form_data, function(d){
+			if(d.error){
+				alert('Ocurrió un error.')
+			}else{
+				data.value = d.result
+			}
 		})
 	})
 })

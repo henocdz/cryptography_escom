@@ -2,10 +2,12 @@ from __future__ import division
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.core.servers.basehttp import FileWrapper
+from django.views.generic.base import View
 from django.http import HttpResponse, StreamingHttpResponse, Http404
 from . import OperationModes as op
 from .HillCipher import HillCipher as hc
 from .Tools import mod, file_format, get_colors, save_image, create_zip
+from .Expansion import Expansion as Expansion_
 from zipfile import ZipFile
 import tempfile
 import json
@@ -241,3 +243,28 @@ def get_img(request, temp_img):
 
     return response
     
+class Expansion(View):
+    def get(self, request):
+        return render_to_response('expansion.html', locals(), RequestContext(request))
+
+    def post(self, request):
+        result = {
+            'error': True,
+            'result': ''
+        }
+
+        if not 'mode' in request.POST:
+            return HttpResponse(json.dumps(result), content_type='application/json')
+
+        expander = Expansion_()
+        mode = request.POST['mode']
+        data = request.POST['data']
+
+        if mode == 'tohex':
+            res = expander.expand(data)
+        else:
+            res = expander.re2(data)
+
+        result['result'] = res
+        result['error'] = False
+        return HttpResponse(json.dumps(result), content_type='application/json')

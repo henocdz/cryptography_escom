@@ -7,4 +7,5 @@ urlpatterns = patterns('',
     url(r'^get_img/(?P<temp_img>.{0,15})/$', oviews.get_img, name='opmodes-get_img'),
     url(r'^decrypt/$', oviews.modes_operation_decrypt, name='opmodes-decrypt'),
     url(r'^encrypt/$', oviews.modes_operation_encrypt, name='opmodes-encrypt'),
+    url(r'^expansion/$', oviews.Expansion.as_view(), name='expansion'),
 )
