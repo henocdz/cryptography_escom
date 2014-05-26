@@ -10,6 +10,7 @@ Cryptography Class @ ESCOM-IPN
 - PIL
 - M2Crypto
 - TkInter
+- Django & Flesk
 
 ####Directories:
 
