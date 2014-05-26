@@ -1,1 +1,0 @@
-CSRF_ENABLED = False
