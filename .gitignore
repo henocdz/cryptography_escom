@@ -1,0 +1,25 @@
+# Object files
+*.o
+*.ko
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+#Folders
+bin/
+lib/
+include/
+lib64/
+
+# Executables
+*.exe
+*.out
+*.app
+*.pyc

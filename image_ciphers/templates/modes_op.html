@@ -1,0 +1,19 @@
+{% extends 'bases/base.html' %}
+{% block section_title %}Modes of Operation{% endblock %}
+ {% block yes_opmodes%}yes{% endblock %}
+{% block content %}
+<form id="opmodes-form" method="POST" enctype="multipart/form-data" class="sm two-btns">
+	{% csrf_token %}
+	<button class="file_cvr"  data-input="#original_img">Seleccionar imagen original</button>
+	<span class="img-sd">No se ha selecc... </span>
+	<input type="file" name="original_img" id="original_img" class="file_input" />
+	<input type="hidden" name="decryption_mode" value="ecb" />
+	<p class="response_status"></p>
+	<div id="btns">
+		<button class="opmodes-sub" data-type="encrypt" data-action="{% url 'opmodes-encrypt' %}"><span class="loader"></span><span class="txt">Encrypt</span></button>
+		<button class="opmodes-sub" data-type="decrypt" data-action="{% url 'opmodes-decrypt' %}"><span class="loader"></span><span class="txt">Decrypt</span></button>
+	</div>
+</form>
+
+<iframe id="download_iframe" style="display:none;"></iframe>
+{% endblock %}
