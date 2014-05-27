@@ -1,11 +1,11 @@
 from flask import render_template, request, make_response
-from app import app
-from . import forms
-import os
-from Crypto.Cipher import DES
-from .tools import create_zip
+from .tools import create_zip, chunker
 from .cryptoimage import CryptoImage
 from Crypto.Util import Counter
+from Crypto.Cipher import DES
+from . import forms
+from app import app
+import os
 
 BASE_DIR = os.path.dirname(__file__)
 OP_MODES = {
@@ -14,6 +14,8 @@ OP_MODES = {
     'ctr': DES.MODE_CTR
 }
 IV = "12345678"
+BLOCK_SIZE_BITS = 64
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/')
@@ -41,6 +43,10 @@ def encrypt():  # Verify
             zep = open(zipath)
 
             res = make_response(zep.read())
+
+            zep.close()
+            os.remove(zipath)
+
             res.headers['Content-Disposition'] = 'attachment; filename="%s_encrypted.zip"' %  ''
 
             return res
@@ -48,6 +54,10 @@ def encrypt():  # Verify
             img_decrypted = decrypt(chunks, password, op_mode, img.size)
             img = open(img_decrypted.path)
             res = make_response(img.read())
+
+            img.close()
+            os.remove(img_decrypted.path)
+
             res.headers['Content-Disposition'] = 'attachment; filename="%s_encrypted.bmp"' %  ''
 
             return res
@@ -56,7 +66,12 @@ def encrypt():  # Verify
 
 
 def decrypt(data, password, mode, img_size):
-    cipher = DES.new(password, mode, IV)
+
+    if mode == DES.MODE_CTR:
+        cipher = DES.new(password, mode, IV, Counter.new(BLOCK_SIZE_BITS))
+    else:
+        cipher = DES.new(password, mode, IV)
+
     image_data = []
     image = CryptoImage()
 
@@ -75,7 +90,7 @@ def encrypt_all(data, password, img_size):
         DES.new(password, DES.MODE_CBC, IV),
         DES.new(password, DES.MODE_CFB, IV),
         DES.new(password, DES.MODE_OFB, IV),
-        # DES.new(password, DES.MODE_CTR, '12345678', Counter)
+        DES.new(password, DES.MODE_CTR, IV, Counter.new(BLOCK_SIZE_BITS))
     ]
     encrypted = []
     for cipher in ciphers:
@@ -89,11 +104,6 @@ def encrypt_all(data, password, img_size):
         encrypted.append(image)
 
     return encrypted
-
-
-def chunker(string):
-    chunks = [string[s:s+8] for s in range(0, len(string), 8)]
-    return chunks
 
 if __name__ == '__main__':
     app.run()

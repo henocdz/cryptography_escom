@@ -16,3 +16,8 @@ def create_zip(paths, filename='demo', ext='bpm'):
     _zip.close()
 
     return zip_path
+
+
+def chunker(string):
+    chunks = [string[s:s+8] for s in range(0, len(string), 8)]
+    return chunks
