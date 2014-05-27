@@ -14,20 +14,7 @@
 					</label>
 				</div>
 			</div>
-			<!--
-			<div class="row">
-				
-				<div class="form-group col-xs-6">
-					<label>Exponent (e)</label>
-					{{form.e(class='form-control col-xs-6', placeholder='e')}}
-				</div>
-				<div class="form-group col-xs-6">
-					<label>Length (n)</label>
-					{{form.n(class='form-control col-xs-6', placeholder='n')}}
-				</div>
 
-			</div>
-			-->
 			<div class="row">
 				<div class="form-group col-xs-12">
 					{{form.url(class='form-control', placeholder='URL PEM Key ex. http://henocdz.com/archivo/pub.key')}}
@@ -42,14 +29,14 @@
 			<button class="btn btn-primary">Sign</button>
 		</form>
 
-		{% if sign_text %}
+{# 		{% if sign_text %}
 			<h5>Signature</h5>
 			<form role="form">
 				<div class="form-group">
 					<input type="text" disabled class="form-control" value="{{sign_text}}" />
 				</div>
 			</form>
-		{% endif %}
+		{% endif %} #}
 
 	</div>
 </section>
