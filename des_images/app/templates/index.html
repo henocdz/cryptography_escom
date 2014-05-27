@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{%  block content %}
+
+
+<section class="row">
+	<div class="col-xs-4 col-xs-offset-4">
+		<h3>DES encryption or decryption for Images</h3>
+		<form  enctype="multipart/form-data" role="form" action="/" method="POST">
+			<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+			
+			<div class="form-group">
+				{{form.image(class="form-control")}}
+			</div>
+
+
+			<div class="form-group">
+				{{form.op_mode(class="form-control")}}
+			</div>
+
+			<div class="form-group">
+				{{form.password(class="form-control",maxlength="8", placeholder="Password")}}
+			</div>
+			
+			<div class="form-group">
+				<label>
+					Encrypt? {{form.encrypt}}
+				</label>
+			</div>
+			<button class="btn btn-primary">Encrypt</button>
+		</form>
+		
+		{% if cipher_text %}
+			<h5>Encrypted</h5>
+			<form role="form">
+				<div class="form-group">
+					<textarea class="form-control">{{cipher_text}}</textarea>
+				</div>
+			</form>
+		{% endif %}
+	</div>
+</section>
+
+{% endblock %}
